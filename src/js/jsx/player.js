@@ -27,7 +27,7 @@ export default class Player extends Component {
 		super(props, context);
 		props.events.subscribe({
 			subscriber: this,
-			event: ["playerPlay", "playerToggle", "playerStop", "playerNext", "playerPrevious", "playerEnqueue", "playerShuffle", "playerVolume"]
+			event: ["playerPlay", "playerToggle", "playerStop", "playerNext", "playerPrevious", "playerEnqueue", "playerShuffle", "playerVolume", "playerSeek"]
 		});
 
 		if (props.persist === true) {
@@ -54,6 +54,7 @@ export default class Player extends Component {
 			case "playerEnqueue": this.enqueue(event.data.action, event.data.tracks); break;
 			case "playerShuffle": this.setState({shuffle: event.data}); break;
 			case "playerVolume": this.volume(event.data); break;
+			case "playerSeek": this.seek(event.data); break;
 		}
 	}
 
@@ -115,6 +116,12 @@ export default class Player extends Component {
 			this.setState({playing: playItem.track});
 		} else {
 			this.setState({playing: null});
+		}
+	}
+
+	seek(seekPercentage) {
+		if (this.player != null) {
+			this.player.seek(seekPercentage);
 		}
 	}
 
@@ -379,6 +386,7 @@ class PlayerProgress extends Component {
 
 	constructor(props, context) {
 		super(props, context);
+		this.mouseDown = this.mouseDown.bind(this);
 		props.events.subscribe({
 			subscriber: this,
 			event: ["playerUpdated", "playerLoading", "playerStopped"]
@@ -386,6 +394,13 @@ class PlayerProgress extends Component {
 	}
 
 	componentWillUnmount() {
+	}
+
+	mouseDown(event) {
+		var rect = document.querySelector(".player-progress").getBoundingClientRect();
+		var seekPercentage = Math.min(1.0, Math.max(0.0, (event.clientX - rect.left) / rect.width));
+
+		this.props.events.publish({event: "playerSeek", data: seekPercentage});
 	}
 
 	receive(event) {
@@ -410,7 +425,7 @@ class PlayerProgress extends Component {
 		var playerProgress = {width: this.state.playerProgress + "%"};
 		var loadingProgress = {width: this.state.loadingProgress + "%"};
 		return (
-			<div className="player-progress">
+			<div className="player-progress" onMouseDown={this.mouseDown} >
 				<div className="ui red progress">
 					<i className="clock icon"></i>
 					<div className="track bar" style={playerProgress}></div>

@@ -53,6 +53,12 @@ export default class AudioPlayer {
 		return this;
 	}
 
+	seek(seekPercentage) {
+		if (this.audio.seekable) {
+			this.audio.currentTime = seekPercentage * this.audio.seekable.end(0);
+		}
+	}
+
 	togglePause() {
 		if (this.audio.paused) this.audio.play();
 		else this.audio.pause();
