@@ -72,6 +72,12 @@ export default class Player extends Component {
 			onResume: function() {
 				events.publish({event: "playerStarted", data: track});
 			},
+			onPrevious: function() {
+				events.publish({event: "playerPrevious", data: track});
+			},
+			onNext: function() {
+				events.publish({event: "playerNext", data: track});
+			},
 			onStop: function() {
 				events.publish({event: "playerStopped", data: track});
 			},
@@ -207,6 +213,9 @@ export default class Player extends Component {
 
 	enqueue(action, tracks) {
 		var queue = this.state.queue.slice();
+		if (!tracks) {
+			tracks = [];
+		}
 
 		if (action == "REPLACE") {
 			queue = tracks.slice();

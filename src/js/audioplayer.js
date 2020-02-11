@@ -12,6 +12,11 @@ export default class AudioPlayer {
 		this.addLoadingEvent('progress', params.onLoading);
 		this.addProgressEvent('timeupdate', params.onProgress);
 
+		if ('mediaSession' in navigator) {
+			navigator.mediaSession.setActionHandler('previoustrack', params.onPrevious);
+			navigator.mediaSession.setActionHandler('nexttrack', params.onNext);
+		}
+
 		// events and everything else configured, set the src to begin loading
 		this.audio.src = params.url;
 
