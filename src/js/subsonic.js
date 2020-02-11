@@ -92,7 +92,8 @@ export default class Subsonic {
 				});
 
 				// sort artists ignoring the 'ignored articles', such as 'The' etc
-				var ignoredArticles = data['subsonic-response'].artists.ignoredArticles.split(' ');
+				var ignoredArticles = data['subsonic-response'].artists.ignoredArticles ?
+					data['subsonic-response'].artists.ignoredArticles.split(' ') : [];
 				allArtists.sort(function(a, b) {
 					var at = a.name;
 					var bt = b.name;
