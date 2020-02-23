@@ -28,6 +28,7 @@
     "imports-loader": "^0.6.5",
     "moment": "^2.13.0",
     "preact": "^8.2.5",
+    "preact-virtual-list": "^0.3.1",
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.5"
   }

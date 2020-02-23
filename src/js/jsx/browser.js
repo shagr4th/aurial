@@ -2,6 +2,9 @@ import { h, Component } from 'preact';
 import {UniqueID} from '../util'
 import {IconMessage,CoverArt} from './common'
 import {Messages} from './app'
+import VirtualList from 'preact-virtual-list';
+
+const Row = row => row;
 
 export default class ArtistList extends Component {
 
@@ -59,6 +62,8 @@ export default class ArtistList extends Component {
 
 		if (!this.state.loaded && artists.length == 0) {
 			artists = <div className="ui inverted active centered inline loader"></div>
+		} else {
+			artists = <VirtualList sync class="virtualList" data={artists} rowHeight={33} renderRow={Row} />
 		}
 
 		return this.state.error || (
