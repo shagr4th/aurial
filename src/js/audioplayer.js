@@ -46,7 +46,7 @@ export default class AudioPlayer {
 	}
 
 	play() {
-		this.audio.play();
+		this.playPromise = this.audio.play();
 		return this;
 	}
 
@@ -76,9 +76,14 @@ export default class AudioPlayer {
 	}
 
 	unload() {
+		if (this.playPromise) {
+			var audio = this.audio; // bad
+			this.playPromise.then(function() {
+				audio.src = '';
+				audio.load();
+			});
+		}
 		this.stop();
-		this.audio.src = '';
-		this.audio.load();
 		return this;
 	}
 }
